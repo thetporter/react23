@@ -36,7 +36,7 @@ export const Home = () => {
       .then(res => res.json())
       .then(res => {
         if (res && Array.isArray(res) && res.length > 0) {
-          setPosts(res.filter(post => (post.userId == userId)));
+          setPosts(res.filter(post => (post.userId === userId)));
           console.log("Received posts for userId", userId);
         }
       })
@@ -65,24 +65,38 @@ export const Home = () => {
                     actions={[<PostProducerKey userId={user.id}/>]}>
                       <p>{user.email}</p>
                       <p>Employed at {user.company.name}</p>
-                      <p>Latest publications: <b>{allPosts.length > 0 && (allPosts.find(post => post.userId == user.id)).title}</b></p>
+                      <p>Latest publications: <b>{allPosts.length > 0 && (allPosts.find(post => post.userId === user.id)).title}</b></p>
                     </Card> 
           })
+        }
+        {users.length <= 0 &&
+            <Card title={"Load up some users! Use the button!"} key={Math.random()} style={{width: 300}}>
+                      <p>Can't have anything until we have more users, you know?</p>
+            </Card>
         }
       </div>
       <hr/>
       <h2 style={{"display":"flex", "margin-left":"16px"}}>
-        <p>Posts of user {posts.length > 0 && users.find(user => user.id == posts[1].userId).name}:</p>
+        <p>Posts of user{posts.lenght < 1 && allPosts.length > 0 && <>s</>}{posts.length > 0 && ` ${users.find(user => user.id === posts[1].userId).name}`}:</p>
       </h2>
       <div>
         {posts.length > 0 &&
           posts.map(post => {
             return <Card title={post.title} key={Math.random()}>
               <p>{post.body}</p>
-              <>by {(users.find(user => user.id == post.userId)).name}</>
+              <>by {(users.find(user => user.id === post.userId)).name}</>
             </Card>
           })
         }
+        {posts.length <= 0 && allPosts.length > 0 &&
+          allPosts.map(post => {
+            return <Card title={post.title} key={Math.random()}>
+              <p>{post.body}</p>
+              <>by {(users.find(user => user.id === post.userId)).name}</>
+            </Card>
+          })
+        }
+        {posts.length < 1 && allPosts.length < 1 && <>Nothing is loaded yet!</>}
       </div>
     </>
   );

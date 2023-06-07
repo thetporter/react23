@@ -1,3 +1,6 @@
 export { Home } from './Pages/HomePage.js'
 export { NotFound } from './Pages/NotFound'
+export { PostsPage } from './Pages/PostPages/PostsPage.js'
+export { PostPage } from './Pages/PostPages/PostPage.js'
+export { CreatorPage } from './Pages/PostPages/CreatorPage.js'
 export { Navbar } from './Navigator/Navigator'
