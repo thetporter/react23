@@ -5,16 +5,23 @@ import { makePost } from '../../../store/Actions/postActions'
 import { Form, Input, Button, Alert } from 'antd'
 import { SaveFilled } from '@ant-design/icons'
 
+const strToBool = (a) => {
+    if (a === "true" || a === "True") return true;
+    else if (a === "false" || a === "False") return false;
+    else return null;
+}
+
 export const CreatorPage = () => {
     const dispatch = useDispatch()
     const returnValue = useSelector((state => state.posts))
     const [isDelivered, setIsDelivered] = useState(false)
 
     const sendPost = (values) => {
-        makePost(dispatch, {title: values.title, min_desc: values.mdesc, desc: values.desc, author: "System"})
+        if (strToBool(localStorage.getItem("auser.logged"))) {
+        makePost(dispatch, {title: values.title, min_desc: values.mdesc, desc: values.desc, author: localStorage.getItem("auser.login")})
         if (returnValue.success === true) {
             setIsDelivered(true);
-        }
+        }} else alert("You must log in to create posts");
     }
 
     return (

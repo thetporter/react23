@@ -8,18 +8,21 @@ import { setUser } from '../../../store/Actions/activeUserActions'
 
 export const RegisterPage = () => {
     const dispatch = useDispatch()
+    const secpatch = useDispatch()
     const returnValue = useSelector((state => state.users))
     const [isDelivered, setIsDelivered] = useState(false)
 
     const sendUser = (values) => {
         createUser(dispatch, {login: values.login, password: values.password, bio: values.bio})
-        setTimeout(() => {if (returnValue.success) setUser(dispatch, returnValue.returned);
-        setIsDelivered(true);}, 1000)
+        setTimeout(() => {
+            setIsDelivered(true);
+            if (returnValue.success) {
+                setUser(secpatch, returnValue.returned);
+                window.localStorage.setItem("auser.logged", "true");
+                window.localStorage.setItem("auser.login", returnValue.returned.login.toString());
+                window.localStorage.setItem("auser.admin", returnValue.returned.admin.toString());
+            }}, 1000)
     }
-
-    //useEffect(() => {
-    //    if (returnValue.success) setUser(dispatch, returnValue.returned);
-    //}, [returnValue])
 
     return (
         <div style={{margin: 25}}>

@@ -11,6 +11,12 @@ import { LoadingOutlined, SaveFilled, EditOutlined } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 
+const strToBool = (a) => {
+    if (a === "true" || a === "True") return true;
+    else if (a === "false" || a === "False") return false;
+    else return null;
+}
+
 export const PostPage = () => {
     const dispatch = useDispatch()
     const secpatch = useDispatch()
@@ -32,10 +38,15 @@ export const PostPage = () => {
     }, [dispatch, id])
 
     const StartEdit = () => {
-        setEditing(true);
-        setTitle(activeState.returned[0].title);
-        setMdesc(activeState.returned[0].min_desc);
-        setDesc(activeState.returned[0].desc);
+        if (strToBool(localStorage.getItem("auser.logged"))) {
+            if ((strToBool(localStorage.getItem("auser.admin"))) ||
+                (activeState.returned[0].author.toString() == localStorage.getItem("auser.login").toString()))
+                {setEditing(true);
+                setTitle(activeState.returned[0].title);
+                setMdesc(activeState.returned[0].min_desc);
+                setDesc(activeState.returned[0].desc);}
+            else {alert("No permissions!")}}
+        else {alert("Log in to edit posts")};
     }
 
     const SendChanges = (newTitle, newMdesc, newDesc) => {
@@ -73,7 +84,7 @@ export const PostPage = () => {
                     </Col>
                 </Row>
                 <Divider />
-                {!editing && 
+                {!editing &&
                 <>
                     <Row>
                         <Title level={1} underline>{activeState.returned[0].title}</Title>
