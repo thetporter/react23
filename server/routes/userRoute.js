@@ -54,7 +54,7 @@ router.get('/users/o', async (req, res) => {
         const response = {
             success: false,
             statMsg: 'GET failed',
-            error: error.toString()
+            returned: error.toString()
         }
 
         res.status(400).json(response).send();
@@ -76,7 +76,7 @@ router.get('/users', async (req, res) => {
         const response = {
             success: false,
             statMsg: 'GET failed',
-            error: error.toString()
+            returned: error.toString()
         }
 
         res.status(400).json(response).send();
@@ -86,34 +86,18 @@ router.get('/users', async (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         let user = new User({
-
+            login: req.body.login,
+            password: req.body.password,
+            bio: req.body.bio,
+            admin: false
         })
-        res.status(200).json(user).send();
-    } catch (error) {
-
-        const response = {
-            success: false,
-            statMsg: 'POST failed',
-            error: error.toString()
-        }
-
-        res.status(400).json(response).send();
-    }
-})
-
-router.post('/login', async (req, res) => {
-    try {
-        const post = await Post.findOne({'_id': req.params.id});
-
-        post.title = "El titulo";
-        post.date_up = Date.now();
-
-        await post.save();
+        await user.save();
+        let returnUser = await User.findOne({'login': user.login});
 
         const response = {
             success: true,
-            statMsg: 'PUT successful',
-            returned: post || {}
+            statMsg: 'POST successful',
+            returned: [returnUser]
         }
 
         res.status(200).json(response).send();
@@ -121,8 +105,53 @@ router.post('/login', async (req, res) => {
 
         const response = {
             success: false,
+            statMsg: 'POST failed',
+            returned: [error.toString()]
+        }
+
+        res.status(400).json(response).send();
+    }
+})
+
+router.put('/login', async (req, res) => {
+    try {
+        const user = {
+            login: req.body.login,
+            password: req.body.password
+        }
+        console.log(user)
+        const checkAgainst = await User.findOne({'login': user.login});
+
+        if (checkAgainst === null) {
+            const response = {
+                success: false,
+                statMsg: 'PUT failed',
+                returned: ["No user with such login exists, try registering instead!"]
+            }
+            res.status(200).json(response).send();
+        } else if (checkAgainst.password === user.password) {
+            
+            const response = {
+                success: true,
+                statMsg: 'PUT successful',
+                returned: [checkAgainst]
+            }
+
+            res.status(200).json(response).send();
+        } else {
+            const response = {
+                success: false,
+                statMsg: 'PUT failed',
+                returned: ["Incorrect password received."]
+            }
+            res.status(200).json(response).send();
+        }
+    } catch (error) {
+
+        const response = {
+            success: false,
             statMsg: 'PUT failed',
-            error: error.toString()
+            returned: [error.toString()]
         }
 
         res.status(400).json(response).send();

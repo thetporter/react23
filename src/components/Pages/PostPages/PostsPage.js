@@ -30,8 +30,8 @@ export const PostsPage = () => {
                 return <Card key={post._id} title={post.title} extra={[
                     <Button type="text" key="opener" href={`/posts/${post._id}`} icon={<PlusSquareOutlined/>}>Open</Button>,
                     <Button type="text" key="creator" href={`/users/?login=${post.author}`} icon={<UserOutlined/>}>By {post.author}</Button>]}>
-                    <h3 style={{wordBreak: "break-all"}}>{post.min_desc}</h3>
-                    <p style={{wordBreak: "break-all"}}>{post.desc.length < 1024 && post.desc}{post.desc.length > 1024 && post.desc.slice(1024) && "..."}</p>
+                    <h3 style={{wordBreak: "break-all", whiteSpace: "pre-wrap"}}>{post.min_desc}</h3>
+                    <p style={{wordBreak: "break-all", whiteSpace: "pre-wrap"}}>{post.desc.length < 1024 && post.desc}{post.desc.length > 1024 && post.desc.slice(1024) && "..."}</p>
                     <Text italic type="secondary" level={5}>Last updated {new Date(post.date_up).toUTCString()}</Text>
                 </Card>
             })}

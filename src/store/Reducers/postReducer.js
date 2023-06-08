@@ -7,13 +7,11 @@ const initState = {
 
 export const postReducer = (state = initState, action) => {
     switch (action.type) {
-        case "success":
+        case "post.success":
             return {...state, ...action}
-        case "failed":
+        case "post.failed":
             return {...state, ...action}
-        case "validating":
-            return {...state, message: "Validating received data..."}
-        case "prefetch":
+        case "post.prefetch":
             return {...state, message: "Establishing connection..." }
         default:
             return {...state }

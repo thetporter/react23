@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { getPost, editPost } from "../../../store/Actions/postActions";
 
 import {Typography, Divider,
-        Grid, Col, Row,
-        Alert, Spin, Button } from "antd";
+        Col, Row,
+        Alert, Spin, Button, Input } from "antd";
 import { LoadingOutlined, SaveFilled, EditOutlined } from '@ant-design/icons';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 export const PostPage = () => {
     const dispatch = useDispatch()
@@ -28,8 +28,7 @@ export const PostPage = () => {
 
     useEffect(() => {
         getPost(dispatch, id);
-        messageref.current = activeState.message;
-        returnedref.current = activeState.current;
+        messageref.current = activeState.message; returnedref.current = activeState.current;
     }, [dispatch, id])
 
     const StartEdit = () => {
@@ -52,7 +51,8 @@ export const PostPage = () => {
         <div style={{margin: 16}}>
             {activeState.loading && !activeState.success &&
             <Spin indicator={<LoadingOutlined/>} size="large"/>}
-            {!activeState.loading && activeState.success && Array.isArray(activeState.returned) && typeof activeState.returned[0] !== 'string' &&
+            {!activeState.loading && activeState.success && Array.isArray(activeState.returned) &&
+            typeof activeState.returned[0] !== 'string' && activeState.returned[0] !== null &&
             <>
                 <Row>
                     <Col span={8}>
@@ -81,26 +81,27 @@ export const PostPage = () => {
                     <Row>
                         <Col span={1} style={{backgroundColor: "lightGray"}}></Col>
                         <Col span={22} push={1}>
-                            <Title level={3}>{activeState.returned[0].min_desc}</Title>
+                            <Title level={3} style={{whiteSpace: "pre-wrap"}}>{activeState.returned[0].min_desc}</Title>
                         </Col>
                     </Row>
-                    <Text >{activeState.returned[0].desc}</Text>
+                    <Paragraph style={{whiteSpace: "pre-wrap"}}>{activeState.returned[0].desc}</Paragraph>
                 </>}
                 {editing && 
                 <>
                     <Row>
-                        <Title level={1} editable={{onChange: setTitle}} underline>{title}</Title>
+                        <Input style={{marginBottom: 10}} onChange={(v) => {setTitle(v.target.value)}} value={title} />
                     </Row>
                     <Row>
-                        <Col span={1} style={{backgroundColor: "lightGray"}}></Col>
+                        <Col span={1} style={{backgroundColor: "lightGray", marginBottom: 10}}></Col>
                         <Col span={22} push={1}>
-                            <Title level={3} editable={{onChange: setMdesc}}>{mdesc}</Title>
+                            <Input.TextArea style={{marginBottom: 10}} rows={3} onChange={(v) => {setMdesc(v.target.value)}} value={mdesc} />
                         </Col>
                     </Row>
-                    <Text editable={{onChange: setDesc, autoSize: true}}>{desc}</Text>
+                    <Input.TextArea rows={7} onChange={(v) => {setDesc(v.target.value)}} value={desc} />
                 </>}
             </>}
-            {!activeState.loading && activeState.success && typeof activeState.returned === 'array' && typeof activeState.returned[0] === 'string' &&
+            {!activeState.loading && activeState.success && Array.isArray(activeState.returned) &&
+            (typeof activeState.returned[0] === 'string' || activeState.returned[0] === null) &&
                 <Alert type="warning" message="We can't find the post you're requesting!" description={`Error ${messageref.current} was returned.`}/>
             }
             {!activeState.loading && !activeState.success &&

@@ -35,7 +35,7 @@ router.get('/posts/:id', async (req, res) => {
             returned: [post]
         }
 
-        console.log("returning success for GET post", responsemsg);
+        console.log("returning success for GET post:", responsemsg);
         res.status(200).json(responsemsg);
     } catch (error) {
         const responsemsg = {
@@ -44,7 +44,7 @@ router.get('/posts/:id', async (req, res) => {
             returned: [error.toString()]
         }
 
-        console.log("returning failure for GET post");
+        console.log("returning failure for GET post:", responsemsg.returned[0]);
         res.status(400).json(responsemsg);
     }
 });

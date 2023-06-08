@@ -77,7 +77,7 @@ export const Home = () => {
       </div>
       <hr/>
       <h2 style={{"display":"flex", "margin-left":"16px"}}>
-        <p>Posts of user{posts.lenght < 1 && allPosts.length > 0 && <>s</>}{posts.length > 0 && ` ${users.find(user => user.id === posts[1].userId).name}`}:</p>
+        <p>Posts of user{posts.length < 1 && allPosts.length > 0 && <>s</>}{posts.length > 0 && ` ${users.find(user => user.id === posts[1].userId).name}`}:</p>
       </h2>
       <div>
         {posts.length > 0 &&
